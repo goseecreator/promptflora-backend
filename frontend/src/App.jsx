@@ -19,21 +19,22 @@ function App() {
   const handleGift = async (tier) => {
     setSelectedTier(tier);
     setRippleFlowing(true);
-
+  
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/gift`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tier }),
       });
-
+  
       const data = await response.json();
-
+  
+      if (!response.ok) {
+        throw new Error(data.error || "Gift failed");
+      }
+  
       setTimeout(() => {
         setRippleFlowing(false);
-        setRippleForwarded(false); // Reset for next round
         alert(`✨ ${data.message}`);
       }, 2000);
     } catch (error) {
@@ -42,6 +43,7 @@ function App() {
       console.error("Gift error:", error);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-aquifer text-white p-6">
