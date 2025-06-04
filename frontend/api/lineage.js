@@ -1,13 +1,11 @@
-import fs from "fs";
-import path from "path";
+let ledger = globalThis.ledger || [];
+globalThis.ledger = ledger;
 
-export default function handler(req, res) {
-  const ledgerPath = path.resolve("ripple-log.json");
-
-  if (!fs.existsSync(ledgerPath)) {
-    return res.status(200).json([]);
+export default async function handler(req, res) {
+  try {
+    return res.status(200).json(ledger);
+  } catch (err) {
+    console.error("❌ Error in /api/lineage:", err);
+    return res.status(500).json({ error: "Internal error reading lineage." });
   }
-
-  const ledger = JSON.parse(fs.readFileSync(ledgerPath));
-  return res.status(200).json(ledger);
 }
