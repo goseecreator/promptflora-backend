@@ -23,14 +23,17 @@ function App() {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/gift`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ tier }),
       });
   
       const data = await response.json();
   
+      // Check response.ok, not just presence of data
       if (!response.ok) {
-        throw new Error(data.error || "Gift failed");
+        throw new Error(data.error || "Unknown error");
       }
   
       setTimeout(() => {
@@ -43,6 +46,7 @@ function App() {
       console.error("Gift error:", error);
     }
   };
+  
   
 
   return (
