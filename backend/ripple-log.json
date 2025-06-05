@@ -36,5 +36,17 @@
     "ripple": 0.47,
     "timestamp": "2025-06-04T01:06:48.663Z",
     "message": "Gift of $5 (Seed) received. Ripple queued."
+  },
+  {
+    "tier": "Blessing",
+    "amount": 108,
+    "ripple": 0.47,
+    "timestamp": "2025-06-04T18:49:31.993Z"
+  },
+  {
+    "tier": "Blessing",
+    "amount": 108,
+    "ripple": 0.47,
+    "timestamp": "2025-06-04T18:54:24.225Z"
   }
 ]

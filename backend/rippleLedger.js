@@ -1,24 +1,31 @@
-const fs = require("fs");
-const path = require("path");
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
 
-const ledgerPath = path.join(__dirname, "ripple-log.json");
+const client = new DynamoDBClient({ region: "us-east-1" });
+const docClient = DynamoDBDocumentClient.from(client);
 
-function writeToLedger(tier) {
-  const log = {
+const TABLE_NAME = "PromptFloraRippleLog";
+
+async function writeToLedger(tier) {
+  const logEntry = {
+    id: `${Date.now()}-${Math.floor(Math.random() * 10000)}`,
     tier: tier.name,
-    amount: tier.amount,
+    amount: Number(tier.amount),
     ripple: 0.47,
     timestamp: new Date().toISOString(),
   };
 
-  let ledger = [];
+  const params = new PutCommand({
+    TableName: TABLE_NAME,
+    Item: logEntry,
+  });
 
-  if (fs.existsSync(ledgerPath)) {
-    ledger = JSON.parse(fs.readFileSync(ledgerPath));
+  try {
+    await docClient.send(params);
+    console.log("✅ Ripple gift logged (v3):", logEntry);
+  } catch (err) {
+    console.error("❌ Error logging ripple (v3):", err);
   }
-
-  ledger.push(log);
-  fs.writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2));
 }
 
 module.exports = { writeToLedger };
